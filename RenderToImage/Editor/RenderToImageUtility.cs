@@ -42,7 +42,7 @@ public class RenderToImageUtility
         camCopy.forceIntoRenderTexture = true;
         camCopy.Render();
         // Get path to save folder
-        string pathToSaveFolder = EditorUtility.SaveFilePanel("Save output", "", "screenshot", ".png");
+        string pathToSaveFolder = EditorUtility.SaveFilePanel("Save output", "", "screenshot", "png");
         // Save render output
         DumpRenderTexture(renderTexture, pathToSaveFolder);
         // Clean up
