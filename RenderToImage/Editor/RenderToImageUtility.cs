@@ -32,8 +32,11 @@ public class RenderToImageUtility
         Camera camCopy = GameObject.Instantiate(mainCam);
         //camCopy.CopyFrom(mainCam);
         camCopy.gameObject.SetActive(false);
-        // Set camera render to Depth only
+#if UNITY_2021_1_OR_NEWER
+        camCopy.clearFlags = CameraClearFlags.Nothing;
+#else
         camCopy.clearFlags = CameraClearFlags.Depth;
+#endif
         // Set camra render layer to Water
         camCopy.cullingMask = 1 << LayerMask.NameToLayer("Water");
         // Force camera to render
