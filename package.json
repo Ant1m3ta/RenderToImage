@@ -1,7 +1,7 @@
 {
   "name": "com.suddenlypancakes.rendertoimage",
   "version": "1.0.0",
-  "displayName": "Helpers for creating rendered images",
+  "displayName": "Render to image",
   "description": "none.",
   "type": "library"
 }
