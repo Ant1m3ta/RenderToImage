@@ -1,0 +1,7 @@
+{
+  "name": "com.suddenlypancakes.render-utilities",
+  "version": "1.0.0",
+  "displayName": "Helpers for creating rendered images",
+  "description": "none.",
+  "type": "library"
+}
