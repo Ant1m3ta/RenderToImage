@@ -64,7 +64,7 @@ public class RenderToImageUtility
     {
         Light light = null;
 
-        bool useCustomLight = !SceneView.lastActiveSceneView.sceneLighting || false;
+        bool useCustomLight = !SceneView.lastActiveSceneView.sceneLighting && false;
 
         if (useCustomLight)
         {
