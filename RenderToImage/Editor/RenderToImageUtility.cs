@@ -4,10 +4,11 @@ using UnityEngine;
 using UnityEditor;
 using System;
 using System.IO;
+using UnityEditor.SceneManagement;
 
 public class RenderToImageUtility
 {
-    [MenuItem("Render to image/To PNG")]
+    [MenuItem("Render to image/Game to PNG")]
     static void RenderToPNG()
     {
         // Find target object
@@ -32,6 +33,7 @@ public class RenderToImageUtility
         Camera camCopy = GameObject.Instantiate(mainCam);
         //camCopy.CopyFrom(mainCam);
         camCopy.gameObject.SetActive(false);
+        // Set camera render to Depth only
 #if UNITY_2021_1_OR_NEWER
         camCopy.clearFlags = CameraClearFlags.Nothing;
 #else
@@ -55,6 +57,43 @@ public class RenderToImageUtility
         {
             targetCache.RecoverLayer();
         }
+    }
+
+    [MenuItem("Render to image/Scene to PNG")]
+    public static void RenderFromSceneView()
+    {
+        Light light = null;
+
+        bool useCustomLight = !SceneView.lastActiveSceneView.sceneLighting;
+
+        if (useCustomLight)
+        {
+            light = new GameObject("light").AddComponent<Light>();
+            StageUtility.PlaceGameObjectInCurrentStage(light.gameObject);
+            light.type = LightType.Directional;
+            light.color = new Color(100f / 255f, 100f / 255f, 100f / 255f);
+            light.intensity = 2f;
+            light.transform.SetPositionAndRotation(SceneView.GetAllSceneCameras()[0].transform.position, SceneView.GetAllSceneCameras()[0].transform.rotation);
+        }
+
+        Camera camCopy = SceneView.GetAllSceneCameras()[0];
+        camCopy.clearFlags = CameraClearFlags.Depth;
+        RenderTexture renderTexture = camCopy.targetTexture;
+        camCopy.targetTexture = renderTexture;
+        camCopy.forceIntoRenderTexture = true;
+        camCopy.Render();
+        camCopy.forceIntoRenderTexture = false;
+        // Get path to save folder
+        string pathToSaveFolder = EditorUtility.SaveFilePanel("Save output", "", "screenshot", "png");
+        // Save render output
+        DumpRenderTexture(renderTexture, pathToSaveFolder);
+
+        if (useCustomLight)
+        {
+            MonoBehaviour.DestroyImmediate(light.gameObject);
+        }
+        // Clean up
+        camCopy.clearFlags = CameraClearFlags.Skybox;
     }
 
     public static void DumpRenderTexture(RenderTexture rt, string pngOutPath)
